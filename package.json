@@ -1,0 +1,26 @@
+{
+  "name": "survey",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "firebase": "^10.12.3",
+    "next": "14.2.5",
+    "react": "^18",
+    "react-device-detect": "^2.2.3",
+    "react-device-info": "^0.0.1",
+    "react-dom": "^18",
+    "react-icons": "^5.2.1",
+    "ua-parser-js": "^1.0.38"
+  },
+  "devDependencies": {
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1"
+  }
+}
