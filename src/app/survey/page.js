@@ -1,32 +1,112 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../firebase';
-import { useRouter } from 'next/navigation';
-import app from '../firebase';
+import { useState, useEffect } from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { useRouter } from "next/navigation";
+import app from "../firebase";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import UAParser from 'ua-parser-js';
+import UAParser from "ua-parser-js";
 
 export default function Survey() {
   const router = useRouter();
   const [form, setForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    country: '',
-    city: '',
-    pincode: '',
-    device: '',
-    browser: '',
-    ip: '',
-    gender: '',
-    age: '',
+    name: "",
+    email: "",
+    phone: "",
+    country: "",
+    city: "",
+    pincode: "",
+    device: "",
+    browser: "",
+    ip: "",
+    gender: "",
+    age: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [user, setUser] = useState(null);
+  const [geoInfo, setGeoInfo] = useState({});
   const auth = getAuth(app);
 
+  const getIpInfo = async (ipAddress) => {
+    try {
+      const response = await fetch(`http://ip-api.com/json/${ipAddress}`);
+      const data = await response.json();
+      console.log(data);
+      setGeoInfo(data);
+      setForm((prevForm) => ({
+        ...prevForm,
+        country: data.country,
+        city: data.city,
+        pincode: data.zip,
+      }));
+    } catch (e) {
+      console.error("Failed to fetch location info: ", e);
+    }
+  };
+
+  const fetchIPAddress = async () => {
+    try {
+      const response = await fetch("https://api.ipify.org?format=json");
+      const data = await response.json();
+      return data.ip;
+    } catch (error) {
+      console.error("Error fetching IP address:", error);
+      return "";
+    }
+  };
+
+  const fetchDeviceType = () => {
+    try {
+      const parser = new UAParser();
+      const result = parser.getResult();
+      return result.os.name || "Unknown";
+    } catch (error) {
+      console.error("Error fetching device type:", error);
+      return "Unknown";
+    }
+  };
+
+  const fetchBrowserType = () => {
+    try {
+      const parser = new UAParser();
+      const result = parser.getResult();
+      return result.browser.name || "Unknown";
+    } catch (error) {
+      console.error("Error fetching browser type:", error);
+      return "Unknown";
+    }
+  };
+
   useEffect(() => {
+    const initialize = async () => {
+      const ipAddress = await fetchIPAddress();
+      const deviceType = fetchDeviceType();
+      const browserType = fetchBrowserType();
+      getIpInfo(ipAddress);
+
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+          setForm((prevForm) => ({
+            ...prevForm,
+            name: user.displayName,
+            email: user.email,
+            device: deviceType,
+            browser: browserType,
+            ip: ipAddress,
+          }));
+        } else {
+          router.push("/");
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    initialize();
+  }, [auth, router]);
+
+    useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
@@ -45,88 +125,26 @@ export default function Survey() {
       console.error("Error signing out", error.message);
     }
   };
-  useEffect(() => {
-    const fetchIPAddress = async () => {
-      try {
-        const response = await fetch('https://api.ipify.org?format=json');
-        const data = await response.json();
-        return data.ip;
-      } catch (error) {
-        console.error('Error fetching IP address:', error);
-        return '';
-      }
-    };
-
-    const fetchDeviceType = () => {
-      try {
-              const parser = new UAParser();
-              const result = parser.getResult();
-              const deviceType = result.os.name || 'Unknown';
-              return deviceType;
-            } catch (error) {
-              console.error('Error fetching device type:', error);
-            }
-    };
-
-    const fetchBrowserType = () => {
-        try {
-      const parser = new UAParser();
-      const result = parser.getResult();
-      const browserType = result.browser.name || 'Unknown';
-      return browserType;
-    } catch (error) {
-      console.error('Error fetching browser type:', error);
-    }
-    };
-
-    const initialize = async () => {
-      const ipAddress = await fetchIPAddress();
-      const deviceType = fetchDeviceType();
-      const browserType = fetchBrowserType();
-      
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setUser(user);
-          setForm((prevForm) => ({
-            ...prevForm,
-            name: user.displayName,
-            email: user.email,
-            device: deviceType,
-            browser: browserType,
-            ip: ipAddress,
-          })); // Update the form state
-        } else {
-          router.push("/");
-        }
-      });
-
-      return () => unsubscribe();
-    };
-
-    initialize();
-  }, [router]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      form.name !== '' &&
-      form.email !== '' &&
-      form.phone !== '' &&
-      form.country !== '' &&
-      form.city !== '' &&
-      form.pincode !== '' &&
-      form.device !== '' &&
-      form.browser !== '' &&
-      form.ip !== '' &&
-      form.age !== ''
-     
-     ) {
-        if(form.age < 1){
-            setError('Age should be greater than 0');
-            return;
-        }
+      form.name !== "" &&
+      form.email !== "" &&
+      form.phone !== "" &&
+      form.country !== "" &&
+      form.city !== "" &&
+      form.pincode !== "" &&
+      form.device !== "" &&
+      form.browser !== "" &&
+      form.ip !== "" &&
+      form.age !== ""
+    ) {
+      if (form.age < 1) {
+        setError("Age should be greater than 0");
+        return;
+      }
       try {
-        const docRef = await addDoc(collection(db, 'info'), {
+        const docRef = await addDoc(collection(db, "info"), {
           name: form.name,
           email: form.email,
           phone: form.phone,
@@ -142,50 +160,52 @@ export default function Survey() {
           age: form.age,
           timestamp: new Date(),
         });
-        console.log('Document written with ID: ', docRef.id);
+        console.log("Document written with ID: ", docRef.id);
         setForm({
-          name: '',
-          email: '',
-          phone: '',
-          country: '',
-          city: '',
-          pincode: '',
-          device: '',
-          browser: '',
-          ip: '',
-          gender: '',
-          age: '',
+          name: "",
+          email: "",
+          phone: "",
+          country: "",
+          city: "",
+          pincode: "",
+          device: "",
+          browser: "",
+          ip: "",
+          gender: "",
+          age: "",
         });
-        router.push('/Dashboard');
+        router.push("/Dashboard");
       } catch (error) {
-        console.error('Error adding document: ', error);
-        setError('Failed to submit form. Please try again later.');
+        console.error("Error adding document: ", error);
+        setError("Failed to submit form. Please try again later.");
       }
     } else {
-      setError('Please fill all the fields');
+      setError("Please fill all the fields");
     }
   };
 
   return (
     <main className="flex min-h-screen flex-col gap-5 items-center justify-center p-4">
-        {user && 
-        
-            <h1 className="text-md font-bold text-[#b6b3b3] text-center md:text-xl">Welcome {user.displayName}</h1>
-
-     
-        }
+      {user && (
+        <h1 className="text-md font-bold text-[#b6b3b3] text-center md:text-xl">
+          Welcome {user.displayName}
+        </h1>
+      )}
       <div>
-        <h1 className="text-4xl font-bold text-white text-center mb-8">Lead Generation Form</h1>
-       
+        <h1 className="text-4xl font-bold text-white text-center mb-8">
+          Lead Generation Form
+        </h1>
 
-
-        <form className=" p-10 rounded-lg"
+        <form
+          className=" p-10 rounded-lg"
           style={{
-            background: 'rgba(217, 217, 217, 0.193)',
-            boxShadow: 'inset 63.6667px -63.6667px 63.6667px rgba(165, 165, 165, 0.193), inset -63.6667px 63.6667px 63.6667px rgba(255, 255, 255, 0.193)',
-            backdropFilter: 'blur(142.613px)'
+            background: "rgba(217, 217, 217, 0.193)",
+            boxShadow:
+              "inset 63.6667px -63.6667px 63.6667px rgba(165, 165, 165, 0.193), inset -63.6667px 63.6667px 63.6667px rgba(255, 255, 255, 0.193)",
+            backdropFilter: "blur(142.613px)",
           }}
-        onSubmit={handleSubmit}>
+          onSubmit={handleSubmit}
+        >
           <div className="flex flex-col space-y-4">
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
               <label htmlFor="name" className=" md:w-[150px] text-xl">
@@ -270,7 +290,7 @@ export default function Survey() {
                 required
               />
             </div>
-          
+
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
               <label htmlFor="gender" className=" md:w-[150px] text-xl">
                 Gender <span className="text-red-700">*</span>
@@ -310,14 +330,19 @@ export default function Survey() {
               Submit
             </button>
 
-            {user && 
-        <div className='flex gap-1 justify-center'>
-            <h1 className="text-md font-bold text-[#b6b3b3] text-center ">Want to Sign Out?</h1>
-      <button onClick={handleLogout} className=" text-white rounded hover:font-bold hover:underline">
-        Sign out
-      </button>
-        </div>
-        }
+            {user && (
+              <div className="flex gap-1 justify-center">
+                <h1 className="text-md font-bold text-[#b6b3b3] text-center ">
+                  Want to Sign Out?
+                </h1>
+                <button
+                  onClick={handleLogout}
+                  className=" text-white rounded hover:font-bold hover:underline"
+                >
+                  Sign out
+                </button>
+              </div>
+            )}
           </div>
         </form>
       </div>
