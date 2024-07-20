@@ -16,7 +16,7 @@ export default function Survey() {
     phone: "",
     country: "",
     city: "",
-    pincode: "",
+    postal: "",
     device: "",
     browser: "",
     ip: "",
@@ -39,7 +39,7 @@ export default function Survey() {
         ...prevForm,
         country: countryName,
         city: data.city,
-        pincode: data.postal,
+        postal: data.postal,
       }));
     } catch (e) {
       console.error("Failed to fetch location info: ", e);
@@ -135,7 +135,7 @@ export default function Survey() {
       form.phone !== "" &&
       form.country !== "" &&
       form.city !== "" &&
-      form.pincode !== "" &&
+      form.postal !== "" &&
       form.device !== "" &&
       form.browser !== "" &&
       form.ip !== "" &&
@@ -153,7 +153,7 @@ export default function Survey() {
           location: {
             country: form.country,
             city: form.city,
-            pincode: form.pincode,
+            postal: form.postal,
           },
           device: form.device,
           browser: form.browser,
@@ -169,7 +169,7 @@ export default function Survey() {
           phone: "",
           country: "",
           city: "",
-          pincode: "",
+          postal: "",
           device: "",
           browser: "",
           ip: "",
@@ -279,15 +279,15 @@ export default function Survey() {
               />
             </div>
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
-              <label htmlFor="pincode" className=" md:w-[150px] text-xl">
-                Pincode <span className="text-red-700">*</span>
+              <label htmlFor="postal" className=" md:w-[150px] text-xl">
+                Postal Code <span className="text-red-700">*</span>
               </label>
               <input
                 type="text"
-                id="pincode"
-                name="pincode"
-                value={form.pincode}
-                onChange={(e) => setForm({ ...form, pincode: e.target.value })}
+                id="postal"
+                name="postal"
+                value={form.postal}
+                onChange={(e) => setForm({ ...form, postal: e.target.value })}
                 className=" rounded-md p-2 focus:outline-none focus:bg-white text-black  shadow border-2  bg-transparent border-[#ffffff8f] "
                 required
               />
