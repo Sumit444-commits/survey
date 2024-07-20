@@ -25,7 +25,6 @@ export default function Survey() {
   });
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
- 
   const auth = getAuth(app);
 
 
@@ -34,7 +33,8 @@ export default function Survey() {
       const response = await fetch(`https://ipinfo.io/${ipAddress}/json`);
       const data = await response.json();
       const countryName = countryList.getName(data.country);
-      setGeoInfo(data);
+
+   
       setForm((prevForm) => ({
         ...prevForm,
         country: countryName,
