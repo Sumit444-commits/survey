@@ -30,7 +30,6 @@ export default function Survey() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        // setForm({ ...form, name: user.displayName, email: user.email }); // Update the name and email in form state;
       } else {
         router.push("/");
       }
@@ -62,10 +61,7 @@ export default function Survey() {
       try {
               const parser = new UAParser();
               const result = parser.getResult();
-          
-            //   const deviceType = result.device.type || 'Unknown';
               const deviceType = result.os.name || 'Unknown';
-              // setForm((prevForm) => ({ ...prevForm, device: deviceType }));
               return deviceType;
             } catch (error) {
               console.error('Error fetching device type:', error);
@@ -77,7 +73,6 @@ export default function Survey() {
       const parser = new UAParser();
       const result = parser.getResult();
       const browserType = result.browser.name || 'Unknown';
-      // setForm((prevForm) => ({ ...prevForm, browser: browserType }));
       return browserType;
     } catch (error) {
       console.error('Error fetching browser type:', error);
@@ -131,7 +126,6 @@ export default function Survey() {
             return;
         }
       try {
-        console.log(form)
         const docRef = await addDoc(collection(db, 'info'), {
           name: form.name,
           email: form.email,
