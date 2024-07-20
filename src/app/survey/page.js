@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import app from "../firebase";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import UAParser from "ua-parser-js";
+import countryList from 'country-list';
 
 export default function Survey() {
   const router = useRouter();
@@ -24,20 +25,21 @@ export default function Survey() {
   });
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
-  const [geoInfo, setGeoInfo] = useState({});
+ 
   const auth = getAuth(app);
+
 
   const getIpInfo = async (ipAddress) => {
     try {
-      const response = await fetch(`http://ip-api.com/json/${ipAddress}`);
+      const response = await fetch(`https://ipinfo.io/${ipAddress}/json`);
       const data = await response.json();
-      console.log(data);
+      const countryName = countryList.getName(data.country);
       setGeoInfo(data);
       setForm((prevForm) => ({
         ...prevForm,
-        country: data.country,
+        country: countryName,
         city: data.city,
-        pincode: data.zip,
+        pincode: data.postal,
       }));
     } catch (e) {
       console.error("Failed to fetch location info: ", e);
