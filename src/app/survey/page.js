@@ -46,49 +46,70 @@ export default function Survey() {
       console.error("Error signing out", error.message);
     }
   };
+  useEffect(() => {
+    const fetchIPAddress = async () => {
+      try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+      } catch (error) {
+        console.error('Error fetching IP address:', error);
+        return '';
+      }
+    };
 
-  const fetchIPAddress = async () => {
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      const data = await response.json();
-      const ipAddress = data.ip;
-      setForm((prevForm) => ({ ...prevForm, ip: ipAddress }));
-      
-    } catch (error) {
-      console.error('Error fetching IP address:', error);
-    }
-  };
+    const fetchDeviceType = () => {
+      try {
+              const parser = new UAParser();
+              const result = parser.getResult();
+          
+            //   const deviceType = result.device.type || 'Unknown';
+              const deviceType = result.os.name || 'Unknown';
+              // setForm((prevForm) => ({ ...prevForm, device: deviceType }));
+              return deviceType;
+            } catch (error) {
+              console.error('Error fetching device type:', error);
+            }
+    };
 
-  const fetchDeviceType = () => {
-    try {
-      const parser = new UAParser();
-      const result = parser.getResult();
-  
-    //   const deviceType = result.device.type || 'Unknown';
-      const deviceType = result.os.name || 'Unknown';
-      setForm((prevForm) => ({ ...prevForm, device: deviceType }));
-    } catch (error) {
-      console.error('Error fetching device type:', error);
-    }
-  };
-
-  const fetchBrowserType = () => {
-    try {
+    const fetchBrowserType = () => {
+        try {
       const parser = new UAParser();
       const result = parser.getResult();
       const browserType = result.browser.name || 'Unknown';
-      setForm((prevForm) => ({ ...prevForm, browser: browserType }));
+      // setForm((prevForm) => ({ ...prevForm, browser: browserType }));
+      return browserType;
     } catch (error) {
       console.error('Error fetching browser type:', error);
     }
-  };
+    };
 
-  useEffect(() => {
-    fetchIPAddress();
-    fetchDeviceType();
-    fetchBrowserType();
- 
-  }, []);
+    const initialize = async () => {
+      const ipAddress = await fetchIPAddress();
+      const deviceType = fetchDeviceType();
+      const browserType = fetchBrowserType();
+      
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUser(user);
+          setForm((prevForm) => ({
+            ...prevForm,
+            name: user.displayName,
+            email: user.email,
+            device: deviceType,
+            browser: browserType,
+            ip: ipAddress,
+          })); // Update the form state
+        } else {
+          router.push("/");
+        }
+      });
+
+      return () => unsubscribe();
+    };
+
+    initialize();
+  }, [router]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,6 +131,7 @@ export default function Survey() {
             return;
         }
       try {
+        console.log(form)
         const docRef = await addDoc(collection(db, 'info'), {
           name: form.name,
           email: form.email,
@@ -151,14 +173,12 @@ export default function Survey() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-4">
+    <main className="flex min-h-screen flex-col gap-5 items-center justify-center p-4">
         {user && 
-        <div className='flex gap-3'>
-            <h1 className="text-2xl font-bold text-[#b6b3b3] text-center ">Welcome {user.displayName}</h1>
-      <button onClick={handleLogout} className="border border-white text-white py-1 px-2 rounded hover:font-bold">
-        Sign out
-      </button>
-        </div>
+        
+            <h1 className="text-md font-bold text-[#b6b3b3] text-center md:text-xl">Welcome {user.displayName}</h1>
+
+     
         }
       <div>
         <h1 className="text-4xl font-bold text-white text-center mb-8">Lead Generation Form</h1>
@@ -256,51 +276,7 @@ export default function Survey() {
                 required
               />
             </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
-              <label htmlFor="device" className=" md:w-[150px] text-xl">
-                Device Type <span className="text-red-700">*</span>
-              </label>
-              <input
-                type="text"
-                id="device"
-                name="device"
-                value={form.device}
-                onChange={(e) => setForm({ ...form, device: e.target.value })}
-                className="border border-gray-300 rounded-md p-2 focus:outline-none bg-slate-400 focus:border-blue-500 text-black"
-                required
-                readOnly
-              />
-            </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
-              <label htmlFor="browser" className=" md:w-[150px] text-xl">
-                Browser Type <span className="text-red-700">*</span>
-              </label>
-              <input
-                type="text"
-                id="browser"
-                name="browser"
-                value={form.browser}
-                onChange={(e) => setForm({ ...form, browser: e.target.value })}
-                className="border border-gray-300 rounded-md p-2 focus:outline-none bg-slate-400 focus:border-blue-500 text-black"
-                required
-                readOnly
-              />
-            </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
-              <label htmlFor="ip" className=" md:w-[150px] text-xl">
-                IP Address <span className="text-red-700">*</span>
-              </label>
-              <input
-                type="text"
-                id="ip"
-                name="ip"
-                value={form.ip}
-                onChange={(e) => setForm({ ...form, ip: e.target.value })}
-                className="border border-gray-300 rounded-md p-2 focus:outline-none bg-slate-400 focus:border-blue-500 text-black"
-                required
-                readOnly
-              />
-            </div>
+          
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
               <label htmlFor="gender" className=" md:w-[150px] text-xl">
                 Gender <span className="text-red-700">*</span>
@@ -339,6 +315,15 @@ export default function Survey() {
             >
               Submit
             </button>
+
+            {user && 
+        <div className='flex gap-1 justify-center'>
+            <h1 className="text-md font-bold text-[#b6b3b3] text-center ">Want to Sign Out?</h1>
+      <button onClick={handleLogout} className=" text-white rounded hover:font-bold hover:underline">
+        Sign out
+      </button>
+        </div>
+        }
           </div>
         </form>
       </div>
