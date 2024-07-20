@@ -110,7 +110,7 @@ export default function Survey() {
             return;
         }
       try {
-        const docRef = await addDoc(collection(db, 'leads'), {
+        const docRef = await addDoc(collection(db, 'info'), {
           name: form.name,
           email: form.email,
           phone: form.phone,
