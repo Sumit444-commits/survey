@@ -3,11 +3,11 @@ import { useState,useEffect } from "react"
 import app from "./firebase"
 import {getAuth} from "firebase/auth"
 import { useRouter } from "next/navigation"
-import { signInWithPopup,GoogleAuthProvider,FacebookAuthProvider,GithubAuthProvider } from "firebase/auth"
+import { signInWithPopup,GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth"
 import Survey from "./survey/page"
 import { FcGoogle } from "react-icons/fc";
+import { FaFacebook } from "react-icons/fa";
 
-import { FaGithub } from "react-icons/fa";
 
 
 const login = ()=>{
@@ -39,10 +39,8 @@ const login = ()=>{
         }
     }
 
-    
-
-    const signInWithGithub = async ()=>{
-        const provider = new GithubAuthProvider()
+    const signInWithFacebook = async ()=>{
+        const provider = new FacebookAuthProvider()
         
         const auth = getAuth(app)
         try{
@@ -50,7 +48,7 @@ const login = ()=>{
             router.push("/survey")
 
         }catch(error){
-            console.error("Error signing in with Github",error.message)
+            console.error("Error signing in with Facebook",error.message)
         }
     }
 
@@ -75,9 +73,9 @@ const login = ()=>{
 
                        <span> Sign in with Google</span>
                         </button>
-                    <button onClick={signInWithGithub} className="flex gap-5 justify-center items-center bg-white text-black cursor-pointer  py-4 px-5 rounded-full">
-                    <FaGithub />
-                        <span>Sign in with Github</span>
+                    <button onClick={signInWithFacebook} className="flex gap-5 justify-center items-center bg-white text-black cursor-pointer  py-4 px-5 rounded-full">
+                    <FaFacebook />
+                        <span>Sign in with Facebook</span>
                         </button>
                  
                     </div>
