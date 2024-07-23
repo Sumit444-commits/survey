@@ -364,7 +364,7 @@ export default function Survey() {
                 name="gender"
                 value={form.gender}
                 onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
+                className="rounded-md p-2 w-[240px] focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
