@@ -188,13 +188,14 @@ export default function Survey() {
       form.postal &&
       form.device &&
       form.browser &&
-      form.ip &&
-      form.age
+      form.ip
+      // form.ip &&
+      // form.age
     ) {
-      if (form.age < 1) {
-        setError("Age should be greater than 0");
-        return;
-      }
+      // if (form.age < 1) {
+      //   setError("Age should be greater than 0");
+      //   return;
+      // }
       try {
         const docRef = await addDoc(collection(db, "info"), {
           name: form.name,
@@ -239,12 +240,12 @@ export default function Survey() {
   return (
     <main className="flex min-h-screen flex-col gap-5 items-center justify-center p-4">
       {user && (
-        <h1 className="text-md font-bold text-[#b6b3b3] text-center md:text-xl">
+        <h1 className="text-md font-bold text-[#b6b3b3] text-black text-center md:text-xl">
           Welcome {user.displayName}
         </h1>
       )}
       <div>
-        <h1 className="text-4xl font-bold text-white text-center mb-8">
+        <h1 className="text-4xl font-bold text-black text-center mb-8">
           Lead Generation Form
         </h1>
 
@@ -270,7 +271,7 @@ export default function Survey() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
               />
             </div>
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
@@ -284,7 +285,7 @@ export default function Survey() {
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
               />
             </div>
             <div className="flex flex-col items-center md:gap-5 md:flex-row">
@@ -302,7 +303,7 @@ export default function Survey() {
             </div>
 
 
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
+            <div className="flex flex-col items-center md:gap-5 md:flex-row hidden">
               <label htmlFor="country" className="md:w-[150px] text-xl">
                 Country <span className="text-red-700">*</span>
               </label>
@@ -314,7 +315,8 @@ export default function Survey() {
                 value={form.country}
                 onChange={handleChange}
                 className="rounded-md p-2 focus:outline-none w-[240px] focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
+                readOnly
               >
                 <option value="">Select a country</option>
                 {countries.map((country, index) => (
@@ -327,7 +329,7 @@ export default function Survey() {
 
 
 
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
+            <div className="flex flex-col items-center md:gap-5 md:flex-row hidden">
               <label htmlFor="city" className="md:w-[150px] text-xl">
                 City <span className="text-red-700">*</span>
               </label>
@@ -338,10 +340,11 @@ export default function Survey() {
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
                 className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
+                
               />
             </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
+            <div className="flex flex-col items-center md:gap-5 md:flex-row hidden">
               <label htmlFor="postal" className="md:w-[150px] text-xl">
                 Postal Code <span className="text-red-700">*</span>
               </label>
@@ -352,10 +355,10 @@ export default function Survey() {
                 value={form.postal}
                 onChange={(e) => setForm({ ...form, postal: e.target.value })}
                 className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
               />
             </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
+            <div className="flex flex-col items-center md:gap-5 md:flex-row hidden">
               <label htmlFor="gender" className="md:w-[150px] text-xl">
                 Gender <span className="text-red-700">*</span>
               </label>
@@ -364,7 +367,7 @@ export default function Survey() {
                 name="gender"
                 value={form.gender}
                 onChange={(e) => setForm({ ...form, gender: e.target.value })}
-                className="rounded-md p-2 w-[240px] focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
+                className="rounded-md p-2 w-[240px] focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f] hidden"
               >
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -372,7 +375,7 @@ export default function Survey() {
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div className="flex flex-col items-center md:gap-5 md:flex-row">
+            <div className="flex flex-col items-center md:gap-5 md:flex-row hidden">
               <label htmlFor="age" className="md:w-[150px] text-xl">
                 Age <span className="text-red-700">*</span>
               </label>
@@ -383,7 +386,7 @@ export default function Survey() {
                 value={form.age}
                 onChange={(e) => setForm({ ...form, age: e.target.value })}
                 className="rounded-md p-2 focus:outline-none focus:bg-white text-black shadow border-2 bg-transparent border-[#ffffff8f]"
-                required
+                // required
               />
             </div>
             {error && <p className="text-red-500">{error}</p>}
@@ -395,12 +398,12 @@ export default function Survey() {
             </button>
             {user && (
               <div className="flex gap-1 justify-center">
-                <h1 className="text-md font-bold text-[#b6b3b3] text-center">
+                <h1 className="text-md font-bold text-[#b6b3b3] text-black text-center">
                   Want to Sign Out?
                 </h1>
                 <button
                   onClick={handleLogout}
-                  className="text-white rounded hover:font-bold hover:underline"
+                  className="text-black rounded hover:font-bold hover:underline"
                 >
                   Sign out
                 </button>

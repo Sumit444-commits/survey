@@ -37,10 +37,10 @@ export default function Dashboard() {
             boxShadow: 'inset 63.6667px -63.6667px 63.6667px rgba(165, 165, 165, 0.193), inset -63.6667px 63.6667px 63.6667px rgba(255, 255, 255, 0.193)',
             backdropFilter: 'blur(142.613px)'
           }}>
-            <h1 className="text-4xl font-bold text-[#eeeeee] text-center ">Thank you</h1>
-            <p className="text-3xl text-[#eeeeee] text-center ">{user.displayName}</p>
-            <p className="text-3xl text-[#eeeeee] text-center ">You have Successfull submitted your <span className='text-gray-700 font-bold'>Lead Generation Form</span></p>
-      <button onClick={handleLogout} className="border border-white text-white py-1 px-2 rounded hover:font-bold">
+            <h1 className="text-4xl font-bold text-[#eeeeee] text-black text-center ">Thank you</h1>
+            <p className="text-3xl text-[#eeeeee] text-black text-center ">{user.displayName}</p>
+            <p className="text-3xl text-[#eeeeee] text-black text-center ">You have Successfull submitted your <span className='text-gray-700 font-bold'>Lead Generation Form</span></p>
+      <button onClick={handleLogout} className="border border-black   text-black py-1 px-2 rounded hover:font-bold">
         Sign out
       </button>
         </div>

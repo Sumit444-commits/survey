@@ -11,7 +11,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className} style={{background: `linear-gradient(90deg, #FD00F3 0%, #1C4AC2 100%)`}}>{children}</body>
+      <body className={inter.className}
+      //  style={{background: `linear-gradient(90deg, #FD00F3 0%, #1C4AC2 100%)`}}
+      
+       >{children}</body>
     </html>
   );
 }

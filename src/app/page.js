@@ -65,7 +65,7 @@ const login = ()=>{
                       }}
                     >
                         <img src="entering.png" className="w-40"/>
-                        <h1 className="text-4xl font-bold">&lt;<span className="text-white">Login</span>/&gt;</h1>
+                        <h1 className="text-4xl font-bold">&lt;<span className="text-black">Login</span>/&gt;</h1>
                     <div className="flex flex-col gap-2 mx-10">
 
                     <button onClick={signInWithGoogle} className="flex gap-5 justify-center items-center bg-white text-black cursor-pointer  py-4 px-5 rounded-full ">
