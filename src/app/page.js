@@ -53,37 +53,33 @@ const login = ()=>{
     }
 
 
-    return(
-        <div className="flex justify-center items-center h-screen flex-col">
-            {user ? <Survey />: (
-                    <>
-                    <div className="flex flex-col justify-center items-center  py-24 rounded-lg gap-10"
-                      style={{
-                        background: 'rgba(217, 217, 217, 0.193)',
-                        boxShadow: 'inset 63.6667px -63.6667px 63.6667px rgba(165, 165, 165, 0.193), inset -63.6667px 63.6667px 63.6667px rgba(255, 255, 255, 0.193)',
-                        backdropFilter: 'blur(142.613px)'
-                      }}
-                    >
-                        <img src="entering.png" className="w-40"/>
-                        <h1 className="text-4xl font-bold">&lt;<span className="text-black">Login</span>/&gt;</h1>
-                    <div className="flex flex-col gap-2 mx-10">
+    return (
+   <div className="flex h-screen">
+    <div className="w-full md:w-1/2 flex justify-center items-center bg-gray-200 p-12 shadow-lg">
+        {user ? (
+            <Survey />
+        ) : (
+            <div className="flex flex-col justify-center items-center gap-6 w-full max-w-md">
+                <h1 className="text-3xl font-extrabold text-gray-900 mb-6">
+                    &lt;<span className="text-blue-600">Login</span>/&gt;
+                </h1>
+                <div className="flex flex-col gap-4 w-full">
+                    <button onClick={signInWithGoogle} className="flex gap-3 justify-center items-center bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 py-3 px-5 rounded-full transition duration-150 ease-in-out">
+                        <FcGoogle className="text-2xl" />
+                        <span className="text-lg font-medium">Sign in with Google</span>
+                    </button>
+                    <button onClick={signInWithFacebook} className="flex gap-3 justify-center items-center bg-blue-700 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-50 py-3 px-5 rounded-full transition duration-150 ease-in-out">
+                        <FaFacebook className="text-2xl" />
+                        <span className="text-lg font-medium">Sign in with Facebook</span>
+                    </button>
+                </div>
+            </div>
+        )}
+    </div>
+    <div className="w-full md:w-1/2 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.ctfassets.net/2pudprfttvy6/6bHil4nvrS5gnCoUX3BqtQ/8b1d4e6093806b1291500c28fb1e9c58/hiring-solutions-hero1.jpg)' }}>
+    </div>
+</div>
 
-                    <button onClick={signInWithGoogle} className="flex gap-5 justify-center items-center bg-white text-black cursor-pointer  py-4 px-5 rounded-full ">
-                    <FcGoogle />
-
-                       <span> Sign in with Google</span>
-                        </button>
-                    <button onClick={signInWithFacebook} className="flex gap-5 justify-center items-center bg-white text-black cursor-pointer  py-4 px-5 rounded-full">
-                    <FaFacebook />
-                        <span>Sign in with Facebook</span>
-                        </button>
-                 
-                    </div>
-                    </div>
-                    </>
-           
-            )}
-        </div>
     );
 }
 export default login;

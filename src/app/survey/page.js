@@ -213,7 +213,7 @@ export default function Survey() {
           age: form.age,
           timestamp: new Date(),
         });
-        console.log("Document written with ID: ", docRef.id);
+        console.log("Document written with ID: ", docRef.id , docRef);
         setForm({
           name: "",
           email: "",
