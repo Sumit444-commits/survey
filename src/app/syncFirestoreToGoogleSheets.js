@@ -13,7 +13,7 @@ async function syncFirestoreToGoogleSheets() {
     const response = await fetch(GOOGLE_SHEET_URL, {
       method: "POST",
       body: JSON.stringify(data),
-      // mode: "no-cors",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
