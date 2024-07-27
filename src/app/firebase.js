@@ -5,13 +5,12 @@ import { getFirestore } from "firebase/firestore";
 import 'dotenv/config'
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBk_NaTVjjB7QXQ0Jidd3ttGDycNvCAJYY",
-  authDomain: "lead-generation-c0654.firebaseapp.com",
-  projectId: "lead-generation-c0654",
-  storageBucket: "lead-generation-c0654.appspot.com",
-  messagingSenderId: "824452637526",
-  appId: "1:824452637526:web:b09870d67b1dcea96c6cf7",
-  measurementId: "G-Q5XBQC7BJK"
+ apiKey: "AIzaSyAs-VtzaGW1UNQ2mLJ_sRHC63FoZpa0L-4",
+authDomain: "morafiq-aviation-services.firebaseapp.com",
+projectId: "morafiq-aviation-services",
+storageBucket: "morafiq-aviation-services.appspot.com",
+messagingSenderId: "46889375086",
+appId: "1:46889375086:web:8dba29b8ed5a3fb4e95d7f"
 };
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
